@@ -33,7 +33,7 @@ el = elastix.ElastixInterface(elastix_path=ELASTIX_PATH)
 el.register(
     fixed_image=fixed_image_path,
     moving_image=moving_image_path,
-    parameters=[r'C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_bspline_multires_MR.txt'],
+    parameters=[r'C:\Users\T2025\Desktop\cadaver_knee_study\code\test_code\elastix\parameters_bspline_multires_MR.txt'],
     output_dir='results_own_data')
 
 # result_path = os.path.join(root_folder,'results', 'result.0.tiff')
