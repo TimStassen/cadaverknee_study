@@ -1,0 +1,166 @@
+
+elastix is started at Mon Apr 22 12:48:02 2024.
+
+which elastix:   C:\Tim\Software\Elastix\elastix.exe
+  elastix version: 5.1.0
+  Git revision SHA: d652938573e5f193955908eba225a854b31ce36a
+  Git revision date: Thu Jan 12 14:20:18 2023 +0100
+  Build date: Jan 12 2023 13:52:33
+  Compiler: Visual C++ version 192930147.0
+  Memory address size: 64-bit
+  CMake version: 3.18.3
+  ITK version: 5.3.0
+
+Command-line arguments: 
+  -f "C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\sessie 1_30-01-2024\2. 01_2019\0.4_Qr40\Schaedel_nach_C.CT.Knie(Adult).28.15.2024.02.19.15.02.17.192.77332975.dcm" -m "C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\sessie 1_30-01-2024\2. 01_2019\0.4_Qr40\Schaedel_nach_C.CT.Knie(Adult).28.18.2024.02.19.15.02.17.192.77333008.dcm" -p C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_exmpl.txt -out results
+
+elastix runs at: FHMLORTHOP038
+  Windows  Professional (x64),  (Build 9200)
+  with 65312 MB memory, and 8 cores @ 3792 MHz.
+-------------------------------------------------------------------------
+
+Running elastix with parameter file 0: "C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_exmpl.txt".
+
+Current time: Mon Apr 22 12:48:02 2024.
+Reading the elastix parameters from file ...
+
+Installing all components.
+InstallingComponents was successful.
+
+ELASTIX version: 5.1.0
+Command line options from ElastixBase:
+-f        C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\sessie 1_30-01-2024\2. 01_2019\0.4_Qr40\Schaedel_nach_C.CT.Knie(Adult).28.15.2024.02.19.15.02.17.192.77332975.dcm
+-m        C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\sessie 1_30-01-2024\2. 01_2019\0.4_Qr40\Schaedel_nach_C.CT.Knie(Adult).28.18.2024.02.19.15.02.17.192.77333008.dcm
+-fMask    unspecified, so no fixed mask used
+-mMask    unspecified, so no moving mask used
+-out      results\
+-p        C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_exmpl.txt
+-priority unspecified, so NORMAL process priority
+-threads  unspecified, so all available threads are used
+Command line options from TransformBase:
+-t0       unspecified, so no initial transform used
+
+=============== start of ParameterFile: C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_exmpl.txt ===============
+// Example parameter file for B-spline registration
+
+// The internal pixel type, used for internal computations
+// Leave to float in general.
+// NB: this is not the type of the input images! The pixel
+// type of the input images is automatically read from the
+// images themselves.
+(FixedInternalImagePixelType "float")
+(MovingInternalImagePixelType "float")
+
+// The dimensions of the fixed and moving image
+//(FixedImageDimension 2)
+//(MovingImageDimension 2)
+
+// Registration setup
+(Registration "MultiResolutionRegistration")
+(NumberOfResolutions 1)
+
+// Optimizer
+(Optimizer "RegularStepGradientDescent")
+(MaximumNumberOfIterations 500)
+
+// Transformation
+(Transform "BSplineTransform")
+// The control point spacing of the bspline transformation in
+// the finest resolution level. 
+(FinalGridSpacingInPhysicalUnits 64)
+
+// Metric
+(Metric "AdvancedNormalizedCorrelation")
+(SubtractMean "true")
+
+// Number of spatial samples used to compute the metric
+// (and its derivative) in each iteration.
+(NumberOfSpatialSamples 4096)
+
+// Refresh these spatial samples in every iteration, and select
+// them randomly. 
+(NewSamplesEveryIteration "true")
+(ImageSampler "RandomCoordinate")
+
+
+// Order of B-Spline interpolation used during registration/optimisation.
+(BSplineInterpolationOrder 1)
+
+// Order of B-Spline interpolation used for applying the final
+// deformation.
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue 0)
+
+
+// Choose whether to generate the deformed moving image.
+(WriteResultImage "true")
+
+// The pixel type and format of the resulting deformed moving image
+(ResultImagePixelType "unsigned char")
+(ResultImageFormat "tiff")
+
+
+
+// Some settings to avoid warnings
+(HowToCombineTransforms "Compose")
+(UseDirectionCosines "true")
+(AutomaticScalesEstimation "true")
+(ErodeMask "false")
+(BSplineTransformSplineOrder 3)
+(UseCyclicTransform "false")
+(ShowExactMetricValue "false")
+(CheckNumberOfSamples "true")
+(FixedImageBSplineInterpolationOrder 1)
+(UseRandomSampleRegion "false")
+(MinimumGradientMagnitude 1e-08)
+(RelaxationFactor 0.5)
+(FixedImagePyramid "FixedRecursiveImagePyramid")
+(MovingImagePyramid "MovingRecursiveImagePyramid")
+// The step size of the optimizer, in mm. 
+(MaximumStepLength 1.0)
+(MinimumStepLength 0.0001) 
+(Interpolator "BSplineInterpolator")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+
+
+
+
+
+
+=============== end of ParameterFile: C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_exmpl.txt ===============
+
+
+Reading images...
+Reading images took 9 ms.
+
+WARNING: the fixed pyramid schedule is not fully specified!
+  A default pyramid schedule is used.
+WARNING: the moving pyramid schedule is not fully specified!
+  A default pyramid schedule is used.
+Initialization of all components (before registration) took: 0 ms.
+Preparation of the image pyramids took: 0 ms.
+
+Resolution: 0
+WARNING: The parameter "UseMultiThreadingForMetrics", requested at entry number 0, does not exist at all.
+  The default value "true" is used instead.
+Setting the fixed masks took: 0 ms.
+Setting the moving masks took: 0 ms.
+Elastix initialization of all components (for this resolution) took: 0 ms.
+Initialization of AdvancedNormalizedCorrelation metric took: 6 ms.
+Time spent in resolution 0 (ITK initialization and iterating): 0.008 s.
+Stopping condition: Error in cost function.
+
+itk::ExceptionObject (000000D8AA4FEEE8)
+Location: "ElastixTemplate - Run()" 
+File: D:\a\elastix\elastix\Elastix-source\Common\CostFunctions\itkAdvancedImageToImageMetric.hxx
+Line: 916
+Description: ITK ERROR: AdvancedNormalizedCorrelationMetric(000002D3CAF3F290): Too many samples map outside moving image buffer: 0 / 4096
+
+
+Error occurred during actual registration.
+
+
+Errors occurred!

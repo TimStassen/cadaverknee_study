@@ -1,0 +1,32 @@
+
+elastix is started at Mon Apr 22 14:02:02 2024.
+
+which elastix:   C:\Tim\Software\Elastix\elastix.exe
+  elastix version: 5.1.0
+  Git revision SHA: d652938573e5f193955908eba225a854b31ce36a
+  Git revision date: Thu Jan 12 14:20:18 2023 +0100
+  Build date: Jan 12 2023 13:52:33
+  Compiler: Visual C++ version 192930147.0
+  Memory address size: 64-bit
+  CMake version: 3.18.3
+  ITK version: 5.3.0
+
+Command-line arguments: 
+  -f C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\ME_data\07_2017\Beeldvorming-Dr.CT.Knie_ortho(Adul.706.322.2024.04.12.15.26.50.347.45932597.dcm -m C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\ME_data\07_2017\Beeldvorming-Dr.CT.Knie_ortho(Adul.706.318.2024.04.12.15.26.50.347.45932641.dcm -p C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_bspline_multires_MR.txt -out results_test
+
+elastix runs at: FHMLORTHOP038
+  Windows  Professional (x64),  (Build 9200)
+  with 65312 MB memory, and 8 cores @ 3792 MHz.
+-------------------------------------------------------------------------
+
+Running elastix with parameter file 0: "C:\Users\T2025\Desktop\cadaver_knee_study\code\config\elastix\parameters_bspline_multires_MR.txt".
+
+Current time: Mon Apr 22 14:02:02 2024.
+Reading the elastix parameters from file ...
+
+ERROR: problem defining fixed image dimension.
+  The parameter file says:     2
+  The fixed image header says: 3
+  Note that from elastix 4.6 the parameter file definition "FixedImageDimension" is not needed anymore.
+  Please remove this entry from your parameter file.
+Errors occurred!
