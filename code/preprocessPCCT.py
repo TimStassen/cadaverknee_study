@@ -28,6 +28,6 @@ def create3D_input(path):
     volume_list = []
     for slice in list_of_slices:
         volume_list.append(sitk.GetArrayViewFromImage(slice)[0])
-    image_array = np.array(volume_list)
+
+    return  np.array(volume_list)
     
-    return sitk.GetImageFromArray(image_array)
