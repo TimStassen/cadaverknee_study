@@ -7,9 +7,6 @@ import os
 import elastix
 
 
-root_folder = r'C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT'
-data_path = r'C:\Users\T2025\Desktop\cadaver_knee_study\data\PCCT\ME_data\07_2017'
-
 
 # IMPORTANT: these paths may differ on your system, depending on where
 # Elastix has been installed. Please set accordingly.
@@ -25,8 +22,8 @@ if not os.path.exists(TRANSFORMIX_PATH):
 if os.path.exists('results_own_data') is False:
     os.mkdir('results_own_data')
 
-moving_image_path = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\test_code\moving_im.jpg'
-fixed_image_path = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\test_code\fixed_im.jpg'
+moving_image_path = r'E:\dcm2mhd\01_2019_2\01_2019_2.mhd'
+fixed_image_path = r'E:\dcm2mhd\07_2017_2\07_2017_2.mhd'
 
 
 el = elastix.ElastixInterface(elastix_path=ELASTIX_PATH)
