@@ -1,0 +1,6 @@
+data/
+*.mhd
+*.nii
+*.dcm
+*.tiff
+*.raw
