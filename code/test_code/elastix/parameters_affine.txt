@@ -9,68 +9,84 @@
 (MovingInternalImagePixelType "float")
 
 // The dimensions of the fixed and moving image
-(FixedImageDimension 3)
-(MovingImageDimension 3)
+//(FixedImageDimension 3)
+//(MovingImageDimension 3)
 
 // Registration setup
-(Registration "MultiResolutionRegistration")
-(NumberOfResolutions 1)
+(Registration "MultiMetricMultiResolutionRegistration")
+(NumberOfResolutions 3) // was 3
+
 
 // Optimizer
-(Optimizer "RegularStepGradientDescent")
-(MaximumNumberOfIterations 500)
+(Optimizer "AdaptiveStochasticGradientDescent")
+//(ASGDParameterEstimationMethod "DisplacementDistribution")
+//(MaximumNumberOfIterations 250)
+//(Optimizer "RegularStepGradientDescent")
+(MaximumNumberOfIterations 500 500 500 500 500)
 
 // Transformation
-(Transform "BSplineTransform")
+(Transform "AffineTransform")
 // The control point spacing of the bspline transformation in
 // the finest resolution level. 
-(FinalGridSpacingInPhysicalUnits 4)
+(FinalGridSpacingInPhysicalUnits 2.0 2.0 2.0) //Found as example in documentation
+
+
 
 // Metric
-(Metric "AdvancedNormalizedCorrelation")
-(SubtractMean "true")
+//(Metric "AdvancedNormalizedCorrelation")
+//(SubtractMean "true")
+(Metric "AdvancedNormalizedCorrelation" "AdvancedMattesMutualInformation")
+// You can change the following values
+(NumberOfHistogramBins 32)
 
+// Sampler
 // Number of spatial samples used to compute the metric
 // (and its derivative) in each iteration.
-(NumberOfSpatialSamples 4096)
+//(NumberOfSpatialSamples 2048) // for testing
+(NumberOfSpatialSamples 5000)
 
 // Refresh these spatial samples in every iteration, and select
 // them randomly. 
 (NewSamplesEveryIteration "true")
 (ImageSampler "RandomCoordinate")
+//(ImageSampler "RandomSamplerSparseMask") 
+(SampleRegionSize 51.0 51.0 79.0)
+(UseRandomSampleRegion "true")
+
 
 
 // Order of B-Spline interpolation used during registration/optimisation.
-(BSplineInterpolationOrder 1)
+(BSplineInterpolationOrder 3 3 3)
 
 // Order of B-Spline interpolation used for applying the final
 // deformation.
-(FinalBSplineInterpolationOrder 3)
+(FinalBSplineInterpolationOrder 3) 
 
 //Default pixel value for pixels that come from outside the picture:
-(DefaultPixelValue 0)
+(DefaultPixelValue -3000)
 
 
 // Choose whether to generate the deformed moving image.
 (WriteResultImage "true")
 
 // The pixel type and format of the resulting deformed moving image
-(ResultImagePixelType "unsigned char")
-(ResultImageFormat "tiff")
-
+(ResultImagePixelType "short")
+(ResultImageFormat "mhd")
 
 
 // Some settings to avoid warnings
+(Metric0Weight 1.0)
+(Metric1Weight 0)
 (HowToCombineTransforms "Compose")
 (UseDirectionCosines "true")
 (AutomaticScalesEstimation "true")
 (ErodeMask "false")
-(BSplineTransformSplineOrder 3)
+//(BSplineTransformSplineOrder 3) //also found in documentation but was already here
 (UseCyclicTransform "false")
-(ShowExactMetricValue "false")
+(ShowExactMetricValue "true")
 (CheckNumberOfSamples "true")
-(FixedImageBSplineInterpolationOrder 1)
-(UseRandomSampleRegion "false")
+//(FixedImageBSplineInterpolationOrder 1)
+//(UseRandomSampleRegion "false")
 (MinimumGradientMagnitude 1e-08)
 (RelaxationFactor 0.5)
 (FixedImagePyramid "FixedRecursiveImagePyramid")
@@ -78,10 +94,6 @@
 // The step size of the optimizer, in mm. 
 (MaximumStepLength 1.0)
 (MinimumStepLength 0.0001) 
-(Interpolator "BSplineInterpolator")
-(ResampleInterpolator "FinalBSplineInterpolator")
+(Interpolator "LinearInterpolator")
+(ResampleInterpolator "FinalNearestNeighborInterpolator" "FinalNearestNeighborInterpolator")
 (Resampler "DefaultResampler")
-
-
-
-
