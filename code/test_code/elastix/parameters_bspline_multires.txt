@@ -1,4 +1,3 @@
-
 // Example parameter file for B-spline registration
 
 // The internal pixel type, used for internal computations
@@ -10,32 +9,33 @@
 (MovingInternalImagePixelType "float")
 
 // The dimensions of the fixed and moving image
-//(FixedImageDimension 2)
-//(MovingImageDimension 2)
+// (FixedImageDimension 3)
+// (MovingImageDimension 3)
+
 
 // Registration setup
 (Registration "MultiResolutionRegistration")
-(NumberOfResolutions 5)
+(NumberOfResolutions 5) //5
 // Define pyramids of both images at multiple scales
-(FixedImagePyramid "FixedShrinkingImagePyramid")
-(MovingImagePyramid "MovingShrinkingImagePyramid")
+(FixedImagePyramid "FixedSmoothingImagePyramid")
+(MovingImagePyramid "MovingSmoothingImagePyramid")
 
 // Optimizer
 (Optimizer "RegularStepGradientDescent")
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 512 512 512 512 512)
+(MaximumNumberOfIterations 200 200 200 200 200) //(MaximumNumberOfIterations 100 100 100 100 100)
 
 
 // Transformation
 (Transform "BSplineTransform")
 // The control point spacing of the bspline transformation in
 // the finest resolution level. 
-(FinalGridSpacingInPhysicalUnits 4)
+(FinalGridSpacingInPhysicalUnits 0.5)
 
 // Metric
 (Metric "AdvancedNormalizedCorrelation")
 (SubtractMean "true")
-(NumberOfSpatialSamples 4096)
+(NumberOfSpatialSamples 5000)
 
 // Refresh these spatial samples in every iteration, and select
 // them randomly. 
@@ -43,21 +43,21 @@
 (ImageSampler "RandomCoordinate")
 
 // Order of B-Spline interpolation used during registration/optimisation.
-(BSplineInterpolationOrder 1)
+(BSplineInterpolationOrder 2)
 
 // Order of B-Spline interpolation used for applying the final
 // deformation.
-(FinalBSplineInterpolationOrder 2)
+(FinalBSplineInterpolationOrder 3)
 
 //Default pixel value for pixels that come from outside the picture:
-(DefaultPixelValue 0)
+(DefaultPixelValue -3000)
 
 // Choose whether to generate the deformed moving image.
 (WriteResultImage "true")
 
 // The pixel type and format of the resulting deformed moving image
-(ResultImagePixelType "unsigned char")
-(ResultImageFormat "dcm")
+// (ResultImagePixelType "short")
+// (ResultImageFormat "mhd")
 
 
 
@@ -71,7 +71,7 @@
 (ErodeMask "false")
 (AutomaticScalesEstimation "true")
 (MaximumStepLength 1.0)
-(MinimumStepLength 0.0001) 
+(MinimumStepLength 0.01) 
 (BSplineTransformSplineOrder 3)
 (UseCyclicTransform "false")
 (ShowExactMetricValue "false")
@@ -80,6 +80,3 @@
 (UseRandomSampleRegion "false")
 (MinimumGradientMagnitude 1e-08)
 (RelaxationFactor 0.5)
-
-
-

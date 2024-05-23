@@ -1,4 +1,4 @@
-// B-spline registration
+// Example parameter file for B-spline registration
 
 // The internal pixel type, used for internal computations
 // Leave to float in general.
@@ -8,10 +8,14 @@
 (FixedInternalImagePixelType "float")
 (MovingInternalImagePixelType "float")
 
+// The dimensions of the fixed and moving image
+// (FixedImageDimension 3)
+// (MovingImageDimension 3)
+
 
 // Registration setup
 (Registration "MultiResolutionRegistration")
-(NumberOfResolutions 5)
+(NumberOfResolutions 5) //5
 // Define pyramids of both images at multiple scales
 (FixedImagePyramid "FixedSmoothingImagePyramid")
 (MovingImagePyramid "MovingSmoothingImagePyramid")
@@ -19,19 +23,19 @@
 // Optimizer
 (Optimizer "RegularStepGradientDescent")
 // Maximum number of iterations in each resolution level:
-(MaximumNumberOfIterations 500 500 500 500 500)
+(MaximumNumberOfIterations 200 200 200 200 200) //(MaximumNumberOfIterations 100 100 100 100 100)
 
 
 // Transformation
 (Transform "BSplineTransform")
 // The control point spacing of the bspline transformation in
 // the finest resolution level. 
-(FinalGridSpacingInPhysicalUnits 4)
+(FinalGridSpacingInPhysicalUnits 0.5 0.5 0.5)
 
 // Metric
 (Metric "AdvancedNormalizedCorrelation")
 (SubtractMean "true")
-(NumberOfSpatialSamples 8192)
+(NumberOfSpatialSamples 5000)
 
 // Refresh these spatial samples in every iteration, and select
 // them randomly. 
@@ -39,23 +43,21 @@
 (ImageSampler "RandomCoordinate")
 
 // Order of B-Spline interpolation used during registration/optimisation.
-(BSplineInterpolationOrder 1)
+(BSplineInterpolationOrder 3)
 
 // Order of B-Spline interpolation used for applying the final
 // deformation.
 (FinalBSplineInterpolationOrder 3)
 
 //Default pixel value for pixels that come from outside the picture:
-(DefaultPixelValue 0)
+(DefaultPixelValue -3000)
 
 // Choose whether to generate the deformed moving image.
 (WriteResultImage "true")
 
 // The pixel type and format of the resulting deformed moving image
-(ResultImagePixelType "unsigned char")
-(ResultImageFormat "tiff")
-
-
+// (ResultImagePixelType "short")
+// (ResultImageFormat "mhd")
 
 
 // Some settings to avoid warnings
