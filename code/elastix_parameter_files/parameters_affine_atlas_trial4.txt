@@ -20,8 +20,8 @@
 (Optimizer "AdaptiveStochasticGradientDescent")
 //(Optimizer "StandardGradientDescent")
 //(ASGDParameterEstimationMethod "DisplacementDistribution")
-(MaximumNumberOfIterations 5 5 5 5 5)
-//(MaximumNumberOfIterations 250 250 250 250 250)
+//(MaximumNumberOfIterations 10 10 10 10 10)
+(MaximumNumberOfIterations 700 500 500 100 100)
 
 // Transformation
 (Transform "AffineTransform")
@@ -30,9 +30,9 @@
 (FinalGridSpacingInPhysicalUnits 0.5 0.5 0.5)
 
 // Metric
-//(Metric "AdvancedNormalizedCorrelation")
+(Metric "AdvancedNormalizedCorrelation")
 //(SubtractMean "true")
-(Metric "AdvancedNormalizedCorrelation" "AdvancedMattesMutualInformation")
+//(Metric "AdvancedNormalizedCorrelation" "AdvancedMattesMutualInformation")
 // You can change the following values
 (NumberOfHistogramBins 32)
 
@@ -40,16 +40,18 @@
 // Number of spatial samples used to compute the metric
 // (and its derivative) in each iteration.
 //(NumberOfSpatialSamples 2048) // for testing
-(NumberOfSpatialSamples 5000) //20000
+(NumberOfSpatialSamples 20000) //5000
 
-// Refresh these spatial samples in every iteration, and select
-// them randomly. 
 (NewSamplesEveryIteration "true")
 (SP_alpha 0.6)
 (SP_A 50.0)
 (SP_a 1000.0 1000.0 1000.0 1000.0 1000.0)
-(ImageSampler "RandomCoordinate") // IF NO MASK IS USED
-//(ImageSampler "RandomSparseMask") // IF MASK IS USED
+
+// Refresh these spatial samples in every iteration, and select
+// them randomly. 
+(NewSamplesEveryIteration "true")
+//(ImageSampler "RandomCoordinate")
+(ImageSampler "RandomSparseMask") 
 (SampleRegionSize 51.0 51.0 79.0)
 (UseRandomSampleRegion "true")
 //(AutomaticTransformInitialization "true")
@@ -76,17 +78,18 @@
 
 
 // Some settings to avoid warnings
-(Metric0Weight 0.5)
-(Metric1Weight 0.5)
+//(Metric0Weight 0.5)
+//(Metric1Weight 0.5)
 (HowToCombineTransforms "Compose")
 (UseDirectionCosines "true")
 (AutomaticScalesEstimation "true")
 (ErodeMask "true")
-(BSplineTransformSplineOrder 3) //also found in documentation but was already here
+//(BSplineTransformSplineOrder 3) //also found in documentation but was already here
 (UseCyclicTransform "false")
 (ShowExactMetricValue "true")
 (CheckNumberOfSamples "true")
-(FixedImageBSplineInterpolationOrder 1)
+//(FixedImageBSplineInterpolationOrder 1)
+//(UseRandomSampleRegion "false")
 (MinimumGradientMagnitude 1e-08)
 (RelaxationFactor 0.5)
 (FixedImagePyramid "FixedSmoothingImagePyramid")
@@ -96,7 +99,7 @@
 //(FixedImagePyramid "FixedRecursiveImagePyramid")
 //(MovingImagePyramid "MovingRecursiveImagePyramid")
 // The step size of the optimizer, in mm. 
-(MaximumStepLength 2.0)
+(MaximumStepLength 5.0)
 (MinimumStepLength 0.0001) 
 (Interpolator "LinearInterpolator")
 (ResampleInterpolator "FinalNearestNeighborInterpolator" "FinalNearestNeighborInterpolator")

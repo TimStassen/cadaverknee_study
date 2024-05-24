@@ -91,7 +91,7 @@ class Atlas:
 
         self.results_list = []
         for moving_image in self.atlas_list:
-            spec_results_path = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-10:-4])
+            spec_results_path = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-11:-4])
             self.results_list.append(spec_results_path)
             # path_moving_im = self.atlas_full_paths 
 
@@ -135,17 +135,17 @@ class Atlas:
         # elif self.fixed_im_mask is None:
         #     return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
         
-
         # pdb.set_trace()
         for moving_image in self.atlas_list:
-            spec_results_path = os.path.join(self.results_path, 'bspline_atlas_img_' + moving_image + '_fixed_'+ fixed_image[-10:-4])
+            pdb.set_trace()
+            spec_results_path = os.path.join(self.results_path, 'bspline_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-11:-4])
             # path_moving_im = self.atlas_full_paths 
             # pdb.set_trace()
             if affine_output_dirs is not False:
                 full_path_moving_im = [i for i in affine_output_dirs if moving_image in i]
                 print('Bspline is performed on manually entered directories transformation done') 
             elif affine_output_dirs is False:
-                full_path_moving_im = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image + '_fixed_'+ fixed_image[-10:-4], 'result.mhd')
+                full_path_moving_im = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-11:-4], 'transformix_results', 'result.mhd')
                 print('Bspline is performed on earlier done affine transformations')
 
             # pdb.set_trace()
@@ -160,7 +160,7 @@ class Atlas:
                 fixed_image=self.fixed_image,
                 fixed_mask=self.fixed_im_mask,
                 moving_image=full_path_moving_im,
-                parameters=[self.affine_parameter_file],
+                parameters=[self.bspline_parameter_file],
                 output_dir=spec_results_path)
             
             # pdb.set_trace()
@@ -196,5 +196,5 @@ if __name__ == "__main__":
                          fixed_image=fixed_image, atlas_path=atlas_path, 
                          fixed_im_mask=fixed_mask, results_path=results_path)
     a.affine_elastix()
-    # a.bspline_elastix()
+    a.bspline_elastix()
 # %%

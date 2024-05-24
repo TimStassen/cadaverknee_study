@@ -11,24 +11,26 @@ import pdb
 atlas_inputs = ['17_2016', '07_2017', '30_2017']
 a = Atlas(inputs = atlas_inputs)
 
-moving_images = ['08_2017', '08_2017R', '10_2019', '12_2018', 
-                 '18_2018', '29_2017', '30_2017']
+fixed_images = ['01_2019','08_2017', '08_2017R', '10_2019', '12_2018', 
+                 '18_2018', '29_2017']
 
 elastix_path = os.path.join(r'C:\Tim\Software\Elastix\elastix.exe')
 transformix_path = os.path.join(r'C:\Tim\Software\Elastix\transformix.exe')
-affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas.txt'
+# affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas.txt'
+affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas_trial10.txt'
 bspline_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_bspline_multires.txt'
 
-for image in moving_images:
+for image in fixed_images:
 
-    fixed_image = f'E:\\ME_data_mhd\\' + image + '\\' + image + '.mhd'
+    # fixed_image = f'E:\\ME_data_mhd\\' + image + '\\' + image + '.mhd'
+    fixed_image = f'E:\\ME_masked\\' + image + '\\' + image + '.mhd'
     fixed_mask = f'E:\segmentations PCCT Tim\masks_flip\\' + '\\' + image + '.mhd' # MASKS ARE FLIPPED, NOT IMAGES!
     # pdb.set_trace()
     atlas_path = r'E:\ME_data_mhd'
-    results_path = r'E:\atlas_registration_results_trial6'
+    results_path = r'E:\atlas_registration_results_trial11_premask'
     a.initialize_elastix(elastix_path, transformix_path, affine_parameter_file=affine_parameter_file, 
                             bspline_parameter_file=bspline_parameter_file,
                             fixed_image=fixed_image, atlas_path=atlas_path, 
-                            fixed_im_mask=fixed_mask, results_path=results_path)
+                            fixed_im_mask=None, results_path=results_path)
     a.affine_elastix()
-    # a.bspline_elastix()
+    a.bspline_elastix()
