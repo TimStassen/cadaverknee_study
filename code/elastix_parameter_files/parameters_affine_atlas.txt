@@ -45,8 +45,8 @@
 // Refresh these spatial samples in every iteration, and select
 // them randomly. 
 (NewSamplesEveryIteration "true")
-//(ImageSampler "RandomCoordinate")
-(ImageSampler "RandomSparseMask") 
+(ImageSampler "RandomCoordinate")
+//(ImageSampler "RandomSparseMask")
 (SampleRegionSize 51.0 51.0 79.0)
 (UseRandomSampleRegion "true")
 //(AutomaticTransformInitialization "true")

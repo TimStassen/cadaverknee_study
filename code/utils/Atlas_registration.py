@@ -76,7 +76,7 @@ class Atlas:
         # pdb.set_trace()
         
 
-    def affine_elastix(self):
+    def affine_elastix(self, fixed_image=None, fixed_im_mask=None, moving_image=None, image_path=None):
         if self.atlas_dir is None:
             return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
         elif self.affine_parameter_file is None:
@@ -85,42 +85,76 @@ class Atlas:
             return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
         # elif self.fixed_im_mask is None:
         #     return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
-        
+        # pdb.set_trace()
         if os.path.exists(self.results_path) is False:
                 os.mkdir(str(self.results_path))
-
         self.results_list = []
-        for moving_image in self.atlas_list:
-            spec_results_path = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-10:-4])
-            self.results_list.append(spec_results_path)
-            # path_moving_im = self.atlas_full_paths 
+        if fixed_image is None:
+            for moving_image in self.atlas_list:
+                spec_results_path = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-10:-4])
+                self.results_list.append(spec_results_path)
+                # path_moving_im = self.atlas_full_paths 
 
-            full_path_moving_im = [i for i in self.atlas_full_paths if moving_image in i]
+                full_path_moving_im = [i for i in self.atlas_full_paths if moving_image in i]
 
-            # pdb.set_trace()
-            if os.path.exists(spec_results_path) is False:
-                os.mkdir(str(spec_results_path))
+                # pdb.set_trace()
+                if os.path.exists(spec_results_path) is False:
+                    os.mkdir(str(spec_results_path))
 
-            print('moving image: \t' + moving_image)
-            # pdb.set_trace()
-            # affine transform
-            el = elastix.ElastixInterface(elastix_path=self.elastix_path)
-            el.register(
-                fixed_image=self.fixed_image,
-                fixed_mask=self.fixed_im_mask,
-                moving_image=full_path_moving_im[0],
-                parameters=[self.affine_parameter_file],
-                output_dir=spec_results_path)
-            
-            # transformix
-            transform_path = os.path.join(spec_results_path, 'TransformParameters.0.txt')
-            
-            tr_output_dir = os.path.join(spec_results_path, 'transformix_results')
-            if os.path.exists(tr_output_dir) is False:
-                os.mkdir(str(tr_output_dir))
+                print('moving image: \t' + moving_image)
+                # pdb.set_trace()
+                # affine transform
+                el = elastix.ElastixInterface(elastix_path=self.elastix_path)
+                el.register(
+                    fixed_image=self.fixed_image,
+                    fixed_mask=self.fixed_im_mask,
+                    moving_image=full_path_moving_im[0],
+                    parameters=[self.affine_parameter_file],
+                    output_dir=spec_results_path)
+                
+                # transformix
+                transform_path = os.path.join(spec_results_path, 'TransformParameters.0.txt')
+                
+                tr_output_dir = os.path.join(spec_results_path, 'transformix_results')
+                if os.path.exists(tr_output_dir) is False:
+                    os.mkdir(str(tr_output_dir))
 
-            tr = elastix.TransformixInterface(parameters=transform_path, transformix_path=self.transformix_path)
-            tr.transform_image(image_path = os.path.join(spec_results_path, 'result.0.mhd'), output_dir=tr_output_dir)
+                tr = elastix.TransformixInterface(parameters=transform_path, transformix_path=self.transformix_path)
+                tr.transform_image(image_path = os.path.join(spec_results_path, 'result.0.mhd'), output_dir=tr_output_dir)
+
+        elif isinstance(fixed_image, str):
+                spec_results_path = os.path.join(self.results_path, 'affine_atlas_img_' + moving_image[:-4] + '_fixed_' + fixed_image[:-4])
+                self.results_list.append(spec_results_path)
+                # path_moving_im = self.atlas_full_paths 
+
+                full_path_moving_im = os.path.join(image_path, moving_image[:-4], moving_image) # wil not work for .nrrd files
+                full_path_fixed_im = os.path.join(image_path, fixed_image[:-4], fixed_image)
+                # pdb.set_trace()
+                if os.path.exists(spec_results_path) is False:
+                    os.mkdir(str(spec_results_path))
+
+                print('moving image: \t' + moving_image)
+                # pdb.set_trace()
+                # affine transform
+                el = elastix.ElastixInterface(elastix_path=self.elastix_path)
+                el.register(
+                    fixed_image=full_path_fixed_im,
+                    fixed_mask=fixed_im_mask,
+                    moving_image=full_path_moving_im,
+                    parameters=self.affine_parameter_file,
+                    output_dir=spec_results_path)
+                
+                # transformix
+                transform_path = os.path.join(spec_results_path, 'TransformParameters.0.txt')
+                
+                tr_output_dir = os.path.join(spec_results_path, 'transformix_results')
+                if os.path.exists(tr_output_dir) is False:
+                    os.mkdir(str(tr_output_dir))
+
+                tr = elastix.TransformixInterface(parameters=transform_path, transformix_path=self.transformix_path)
+                tr.transform_image(image_path = os.path.join(spec_results_path, 'result.0.mhd'), output_dir=tr_output_dir)
+        else:
+            print('Elastix was not used, check the input variable or bugs in the code')
         
 
 
@@ -183,18 +217,18 @@ if __name__ == "__main__":
     atlas_inputs = ['17_2016', '07_2017', '30_2017']
     a = Atlas(inputs = atlas_inputs)
 
-    elastix_path = os.path.join(r'C:\Tim\Software\Elastix\elastix.exe')
-    transformix_path = os.path.join(r'C:\Tim\Software\Elastix\transformix.exe')
-    affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas.txt'
-    bspline_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_bspline_multires.txt'
-    fixed_image = r'E:\dcm2mhd\01_2019\01_2019.mhd'
-    fixed_mask = r'E:\segmentations PCCT Tim\masks\01_2019.nrrd' # FILL IN PATH TO .nrrd FILE 
-    atlas_path = r'E:\ME_data_mhd'
-    results_path = r'E:\atlas_registration_results_test'
-    a.initialize_elastix(elastix_path, transformix_path, affine_parameter_file=affine_parameter_file, 
+    elastix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\elastix.exe')
+    transformix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\transformix.exe')
+    affine_parameter_file = r'C:\Users\20201900\Desktop\cadaver_knee_study2-main\code\cadaver_knee_study2\code\elastix_parameter_files\parameters_rigid.txt'
+    bspline_parameter_file = r'C:\Users\20201900\Desktop\cadaver_knee_study2-main\code\cadaver_knee_study2\code\elastix_parameter_files\Parameters_BSpline.txt'
+    fixed_image = r'D:\dcm2mhd\01_2019\01_2019.mhd'
+    # fixed_mask = r'D:\segmentations PCCT Tim\masks\01_2019.nrrd' # FILL IN PATH TO .nrrd FILE
+    atlas_path = r'D:\ME_data_mhd'
+    results_path = r'D:\atlas_registration_results_test_bone5'
+    a.initialize_elastix(elastix_path, transformix_path, affine_parameter_file=[affine_parameter_file, bspline_parameter_file], 
                          bspline_parameter_file=bspline_parameter_file,
                          fixed_image=fixed_image, atlas_path=atlas_path, 
-                         fixed_im_mask=fixed_mask, results_path=results_path)
-    a.affine_elastix()
+                         fixed_im_mask=None, results_path=results_path)
+    a.affine_elastix(fixed_image='12_2018_femur.mhd', moving_image='17_2016_femur.mhd', image_path=r'D:\masked_scans_bone')
     # a.bspline_elastix()
-# %%
+
