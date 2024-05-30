@@ -2,12 +2,13 @@ import os
 import SimpleITK as sitk
 import numpy as np
 import matplotlib.pyplot as plt
+from scrollview import ScrollView
 
-mhd_path = r'E:\ME_data_mhd\12_2018\12_2018.mhd'
+mhd_path = r'E:\ME_data_mhd\01_2019\01_2019.mhd'
 itk_image = sitk.ReadImage(mhd_path)
 image_array = sitk.GetArrayViewFromImage(itk_image)
 
-mask_path = r'E:\segmentations PCCT Tim\bone_segs\nrrd\12_2018\flipped_correct\12_2018_femur.mhd'
+mask_path = r'E:\masked_scans_bone\01_2019\01_2019_tibia.mhd'
 itk_image_mask = sitk.ReadImage(mask_path)
 mask_array = sitk.GetArrayViewFromImage(itk_image_mask)
 
@@ -19,3 +20,13 @@ ax[0].imshow(image_array[:,:,250], cmap='gray')
 ax[1].imshow(mask_array[:,:,250], cmap='gray')
 ax[2].imshow(combined[:,:,250], cmap='gray')
 plt.show()
+# 
+
+# For scrollview:
+
+# mask_array_sag = np.einsum('kli->ikl', mask_array)
+
+# plt.show()
+# fig, ax = plt.subplots()
+# ScrollView(mask_array_sag).plot(ax, cmap='bone')
+# plt.show()
