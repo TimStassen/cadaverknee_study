@@ -7,7 +7,7 @@ fix_path = r'D:\ME_data_mhd\12_2018\12_2018.mhd'
 itk_image = sitk.ReadImage(fix_path)
 image_array1 = sitk.GetArrayViewFromImage(itk_image)
 
-mov_path = r'D:\atlas_registration_results_test_bone\affine_atlas_img_17_2016_femur.mhd_fixed__femur\transformix_results\result.mhd'
+mov_path = r"D:\atlas_registration_results_trial11_premask\affine_atlas_img_07_2017_fixed_01_2019\result.0.mhd"
 itk_image = sitk.ReadImage(mov_path)
 image_array2 = sitk.GetArrayViewFromImage(itk_image)
 
