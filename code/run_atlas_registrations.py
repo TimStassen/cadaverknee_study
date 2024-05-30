@@ -26,7 +26,8 @@ for image in fixed_images:
     fixed_image = f'E:\\ME_masked\\' + image + '\\' + image + '.mhd'
     fixed_mask = f'E:\segmentations PCCT Tim\masks_flip\\' + '\\' + image + '.mhd' # MASKS ARE FLIPPED, NOT IMAGES!
     # pdb.set_trace()
-    atlas_path = r'E:\ME_data_mhd'
+    # atlas_path = r'E:\ME_data_mhd'
+    atlas_path = r''
     results_path = r'E:\atlas_registration_results_trial11_premask'
     a.initialize_elastix(elastix_path, transformix_path, affine_parameter_file=affine_parameter_file, 
                             bspline_parameter_file=bspline_parameter_file,

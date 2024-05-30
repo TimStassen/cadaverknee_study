@@ -1,0 +1,80 @@
+// Description: similarity
+
+//ImageTypes
+//(FixedInternalImagePixelType "float")
+//(FixedImageDimension 3)
+//(MovingInternalImagePixelType "float")
+//(MovingImageDimension 3)
+//(UseDirectionCosines "true")
+
+//Components
+(Registration "MultiResolutionRegistration")
+(FixedImagePyramid "FixedSmoothingImagePyramid")
+(FixedImagePyramidSchedule 32 32 32 8 8 8 2 2 2 1 1 1)
+(MovingImagePyramid "MovingSmoothingImagePyramid")
+(MovingImagePyramidSchedule 32 32 32 8 8 8 2 2 2 1 1 1)
+(Interpolator "BSplineInterpolator")
+//(Metric "AdvancedMattesMutualInformation")
+(Metric "AdvancedNormalizedCorrelation")
+(Optimizer "AdaptiveStochasticGradientDescent")
+(ResampleInterpolator "FinalBSplineInterpolator")
+(Resampler "DefaultResampler")
+//(Transform "AffineTransform")
+(Transform SimilarityTransform)
+
+//(ErodeMask "false" )
+//(ErodeFixedMask "true" )
+//(ErodeMovingMask "false" )
+
+(NumberOfResolutions 5)
+(FinalGridSpacingInVoxels 10.0 10.0 10.0) //20 
+
+(HowToCombineTransforms "Compose")
+(AutomaticTransformInitialization "true")
+(AutomaticScalesEstimation "true")
+
+(WriteTransformParametersEachIteration "false")
+(WriteResultImage "true")
+(CompressResultImage "false")
+(ResultImageFormat "mhd")
+(WriteResultImageAfterEachResolution "false") 
+(ShowExactMetricValue "false")
+(ResultImagePixelType "short")
+
+//Maximum number of iterations in each resolution level:
+(MaximumNumberOfIterations 750) 
+
+//Number of grey level bins in each resolution level:
+(NumberOfHistogramBins 32)
+(FixedLimitRangeRatio 0.0)
+(MovingLimitRangeRatio 0.0)
+(FixedKernelBSplineOrder 3)
+(MovingKernelBSplineOrder 3)
+
+
+//Number of spatial samples used to compute the mutual information in each resolution level:
+(ImageSampler "RandomCoordinate")
+(FixedImageBSplineInterpolationOrder 1 )
+(UseRandomSampleRegion "false")
+(NumberOfSpatialSamples 7000 )
+(NewSamplesEveryIteration "true")
+(CheckNumberOfSamples "true")
+(MaximumNumberOfSamplingAttempts 10)
+
+//Order of B-Spline interpolation used in each resolution level:
+(BSplineInterpolationOrder 1)
+
+//Order of B-Spline interpolation used for applying the final deformation:
+(FinalBSplineInterpolationOrder 3)
+
+//Default pixel value for pixels that come from outside the picture:
+(DefaultPixelValue -3000)
+
+//SP: Param_a in each resolution level. a_k = a/(A+k+1)^alpha
+//(SP_a 0.125 ) //100
+
+//SP: Param_A in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_A 20.0 )
+
+//SP: Param_alpha in each resolution level. a_k = a/(A+k+1)^alpha
+(SP_alpha 1.0 ) 

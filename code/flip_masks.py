@@ -31,14 +31,15 @@ def flip_masks(mask_path, im_path, output_path):
 
 
 if __name__ == "__main__":
-    root_mask_path = r'E:\segmentations PCCT Tim\masks'
+    root_mask_path = r'E:\segmentations PCCT Tim\bone_segs\nrrd\17_2016'
     root_mask_dir = os.listdir(root_mask_path)
     root_im_path = r'E:\ME_data_mhd'
-    output_path = r'E:\segmentations PCCT Tim\masks_flip'
+    output_path = r'E:\segmentations PCCT Tim\bone_segs\nrrd\17_2016\flipped_correct'
     for image in root_mask_dir:
         # pdb.set_trace()
         mask_path = os.path.join(root_mask_path, image)
-        im_path = os.path.join(root_im_path, image[:-5], image[:-5] + '.mhd')
+        im_path = os.path.join(root_im_path, image[:7], image[:7] + '.mhd') # 
+        # pdb.set_trace()
         # pdb.set_trace()
         flip_masks(mask_path, im_path, output_path)
 

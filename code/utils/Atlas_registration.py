@@ -137,7 +137,7 @@ class Atlas:
         
         # pdb.set_trace()
         for moving_image in self.atlas_list:
-            pdb.set_trace()
+            # pdb.set_trace()
             spec_results_path = os.path.join(self.results_path, 'bspline_atlas_img_' + moving_image + '_fixed_'+ self.fixed_image[-11:-4])
             # path_moving_im = self.atlas_full_paths 
             # pdb.set_trace()
@@ -180,21 +180,23 @@ class Atlas:
         return None
 
 if __name__ == "__main__":
-    atlas_inputs = ['17_2016', '07_2017', '30_2017']
+    atlas_inputs = ['17_2016_femur'] # , '07_2017', '30_2017'
     a = Atlas(inputs = atlas_inputs)
 
     elastix_path = os.path.join(r'C:\Tim\Software\Elastix\elastix.exe')
     transformix_path = os.path.join(r'C:\Tim\Software\Elastix\transformix.exe')
-    affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas.txt'
+    # affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas_trial10.txt'
+    affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_similarity_atlas_test.txt'
     bspline_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_bspline_multires.txt'
-    fixed_image = r'E:\dcm2mhd\01_2019\01_2019.mhd'
-    fixed_mask = r'E:\segmentations PCCT Tim\masks\01_2019.nrrd' # FILL IN PATH TO .nrrd FILE 
+    fixed_image = r'E:\ME_data_mhd\12_2018\12_2018.mhd'
+    fixed_mask = r'E:\segmentations PCCT Tim\bone_segs\nrrd\12_2018\flipped_correct\12_2018_femur.mhd' # FILL IN PATH TO .nrrd FILE 
     atlas_path = r'E:\ME_data_mhd'
-    results_path = r'E:\atlas_registration_results_test'
+    # atlas_path = r''
+    results_path = r'E:\atlas_registration_results_test_bone3'
     a.initialize_elastix(elastix_path, transformix_path, affine_parameter_file=affine_parameter_file, 
                          bspline_parameter_file=bspline_parameter_file,
                          fixed_image=fixed_image, atlas_path=atlas_path, 
-                         fixed_im_mask=fixed_mask, results_path=results_path)
+                         fixed_im_mask=None, results_path=results_path)
     a.affine_elastix()
-    a.bspline_elastix()
+    # a.bspline_elastix()
 # %%

@@ -3,11 +3,11 @@ import SimpleITK as sitk
 import numpy as np
 import matplotlib.pyplot as plt
 
-mhd_path = r'E:\ME_data_mhd\01_2019\01_2019.mhd'
+mhd_path = r'E:\ME_data_mhd\12_2018\12_2018.mhd'
 itk_image = sitk.ReadImage(mhd_path)
 image_array = sitk.GetArrayViewFromImage(itk_image)
 
-mask_path = r'E:\segmentations PCCT Tim\masks_flip\01_2019.mhd'
+mask_path = r'E:\segmentations PCCT Tim\bone_segs\nrrd\12_2018\flipped_correct\12_2018_femur.mhd'
 itk_image_mask = sitk.ReadImage(mask_path)
 mask_array = sitk.GetArrayViewFromImage(itk_image_mask)
 

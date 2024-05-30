@@ -4,13 +4,13 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pdb
 
-im_path = r'E:\ME_data_mhd'
+im_path = r'E:\ME_data_mhd\12_2018'
 root_im_dir = os.listdir(im_path)
 
-mask_path = r'E:\segmentations PCCT Tim\masks_flip'
+mask_path = r'E:\segmentations PCCT Tim\bone_segs\nrrd\12_2018\flipped_correct'
 root_mask_dir = os.listdir(mask_path)
 
-output_path = r'E:\masked_scans'
+output_path = r'E:\masked_scans_bone'
 if os.path.exists(output_path) is False:
     os.mkdir(str(output_path))
 
@@ -24,11 +24,14 @@ for image, mask in zip(root_im_dir, root_mask_dir):
     if os.path.exists(new_scan_path) is False:
         os.mkdir(str(new_scan_path))
 
-    single_im_path = os.path.join(im_path, image, image + '.mhd')
+    # single_im_path = os.path.join(im_path, image, image + '.mhd')
+    single_im_path = os.path.join(im_path, image[:7]+ '.mhd')
     itk_image = sitk.ReadImage(single_im_path)
     image_array = sitk.GetArrayViewFromImage(itk_image)
+    pdb.set_trace()
 
-    single_mask_path = os.path.join(mask_path, image, image + '.mhd')
+    # single_mask_path = os.path.join(mask_path, image, image + '.mhd')
+    single_mask_path = os.path.join(mask_path, image[:7] + '_femur' + '.mhd')
     itk_image_mask = sitk.ReadImage(single_mask_path)
     mask_array = sitk.GetArrayViewFromImage(itk_image_mask)
 
@@ -43,8 +46,8 @@ for image, mask in zip(root_im_dir, root_mask_dir):
     new_sitk_img = sitk.GetImageFromArray(combined_tr, isVector=False)
     new_sitk_img.SetSpacing(spacing)
     new_sitk_img.SetOrigin(origin)
-    sitk.WriteImage(new_sitk_img, os.path.join(output_path, image + ".mhd"))
-    print('Flipped mask stored at:', os.path.join(output_path, image + ".mhd"))
+    sitk.WriteImage(new_sitk_img, os.path.join(output_path, image[:7] + '_femur' + ".mhd"))
+    print('Flipped mask stored at:', os.path.join(output_path, image[:7] + '_femur' + ".mhd"))
 
 
 # plt.figure()
