@@ -252,24 +252,30 @@ class Atlas:
     #         tr.transform_image(image_path = os.path.join(spec_results_path, 'result.0.mhd'), output_dir=tr_output_dir)
 
 
-    def apply_transformation(self, transformation_file_dir, segmentation_img_dir, fixed_image=None, moving_image=None):
+    def apply_transformation(self, transformation_file_dir, segmentation_img, fixed_image=None, moving_image=None, transformix_path=None):
         # transformix
         # if registratons have been done in the same operation, self.results_list can be used, otherwise the path has to be specified
-            for spec_results_path in os.listdir(transformation_file_dir):
-                # pdb.set_trace()
-                transform_path = os.path.join(transformation_file_dir, spec_results_path, 'TransformParameters.1.txt')
+            # for spec_results_path in os.listdir(transformation_file_dir):
+                if transformix_path == None:
+                    #  if self.transformix_path == None:
+                    # assert 'No transformix path defined! Add this in transformix_path=... or during initialization'
+                    #  else:
+                        transformix_path = self.transformix_path
                 
-                tr_output_dir = os.path.join(transformation_file_dir, spec_results_path, 'transformix_results')
+
+                transform_file = os.path.join(transformation_file_dir, 'TransformParameters.1.txt') # last parameter file performed in this case
+                
+                tr_output_dir = os.path.join(transformation_file_dir, 'transformix_results')
                 if os.path.exists(tr_output_dir) is False:
                     os.mkdir(str(tr_output_dir))
 
                 # pdb.set_trace()
                 # make code indicating what knee tructure it is:
-                knee_struct = spec_results_path.split("_",3)[-1].split("_",4)  
-                # pdb.set_trace()
+                # knee_struct = spec_results_path.split("_",3)[-1].split("_",4)  
+                pdb.set_trace()
             
-                tr = elastix.TransformixInterface(parameters=transform_path, transformix_path=self.transformix_path)
-                tr.transform_image(image_path = os.path.join(segmentation_img_dir, 'result' +  + '.mhd'), output_dir=tr_output_dir)
+                tr = elastix.TransformixInterface(parameters=transform_file, transformix_path=transformix_path)
+                tr.transform_image(image_path = segmentation_img, output_dir=tr_output_dir)
 
     def show_evaluation(self):
 
