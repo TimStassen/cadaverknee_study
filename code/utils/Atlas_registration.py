@@ -41,12 +41,7 @@ class Atlas:
     
     def _check_L_or_R(self):
         # !! only applicable for the atlas_images: '07_2017' (right), '17_2016' (left), '30_2017' (left) !!
-
-
-
-        if self.fixed_image == '01_2019':       # right-sided knee
-            # self.atlas_list.remove('17_2016')
-            # self.atlas_list.remove('30_2017')
+        if self.fixed_image == '01_2019':   # right-sided knee
             self.atlas_list = [e for e in self.atlas_list if e not in ('17_2016', '30_2017')]
         elif self.fixed_image == '08_2017':     # left-sided knee
             self.atlas_list.remove('07_2017')
@@ -63,34 +58,36 @@ class Atlas:
 
         return self.atlas_list
     
-    def _check_anatomical_ROI(self):
-         if self.anatomical_structure == 'femur':
-              self.atlas_list = [s + '_femur' for s in self.atlas_list]
-         elif self.anatomical_structure == 'patella':
-              self.atlas_list = [s + '_patella' for s in self.atlas_list]
-         elif self.anatomical_structure == 'tibia':
-              self.atlas_list = [s + '_tibia' for s in self.atlas_list]
-        
-        # if scan in all_scan_codes for scan in all_scan_codes.inputs:
+
     def create_atlas_dir(self, path=None):
+        # pdb.set_trace()
         if path is None and self.path is None:
             return f"Variable: 'path', is not defined"
         elif path is None:
             path = self.path
-
         elif self.path is None:
             self.path = path
 
         self.atlas_list = self._check_atlas_codes()
-        self._check_anatomical_ROI()
-
+        # pdb.set_trace()
+        # only include the same VOI (fibula not included)
         atlas_full_paths = []
         for scan in self.atlas_list:
-            atlas_full_paths.append(os.path.join(self.path, scan+'.mhd'))
+            for anatomical_struct in ['_femur', '_tibia', '_patella']:
+                atlas_full_paths.append(os.path.join(self.path, scan, scan + anatomical_struct +'.mhd'))
+
+        if 'femur' in self.fixed_image:
+            atlas_full_paths_filt = [e for e in atlas_full_paths if "femur" in e]
+        elif 'tibia' in self.fixed_image:
+            atlas_full_paths_filt = [e for e in atlas_full_paths if "tibia" in e]
+        elif 'patella' in self.fixed_image:
+            atlas_full_paths_filt = [e for e in atlas_full_paths if "patella" in e]
+        # elif 'fibula' in self.fixed_image:
+        #     atlas_full_paths_filt = [e for e in atlas_full_paths if "fibula" in e]
         
-        self.atlas_full_paths = atlas_full_paths
+        self.atlas_full_paths = atlas_full_paths_filt
         
-        return self.atlas_full_paths
+
     
     def initialize_elastix(self, elastix_path, transformix_path, parameter_files, fixed_image, atlas_path, fixed_im_mask, results_path, anatomical_structure=None):
         
@@ -103,30 +100,24 @@ class Atlas:
         if not os.path.exists(self.transformix_path):
             raise IOError('Transformix cannot be found, please set the correct TRANSFORMIX_PATH.')
 
-        # self.atlas_dir = self.create_atlas_dir(atlas_path)
-        # pdb.set_trace()
-        
-        
-        self.atlas_dir = self.create_atlas_dir(atlas_path)
-        self.atlas_list = self._check_L_or_R()
+        self.atlas_path = atlas_path
         self.parameter_files = parameter_files
         self.fixed_image = fixed_image
         self.fixed_im_mask = fixed_im_mask
         self.results_path = results_path
-        
-    
-        
+        self.atlas_dir = self.create_atlas_dir(atlas_path)
+        self.atlas_list = self._check_L_or_R()
+        # pdb.set_trace()
 
+    
     def run_elastix(self, fixed_image=None, fixed_im_mask=None, moving_image=None, image_path=None):
-        if self.atlas_dir is None:
+        if self.atlas_full_paths is None:
             return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
         elif self.parameter_files is None:
             return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')         
         elif self.fixed_image is None:
             return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
-        # elif self.fixed_im_mask is None:
-        #     return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
-        # pdb.set_trace()
+        
         if os.path.exists(self.results_path) is False:
                 os.mkdir(str(self.results_path))
         self.results_list = []
@@ -136,49 +127,34 @@ class Atlas:
             for moving_image in self.atlas_list:
                 spec_results_path = os.path.join(self.results_path, 'atlas_img_' + moving_image + '_fixed_'+ fixed_image)
                 self.results_list.append(spec_results_path)
-                # path_moving_im = self.atlas_full_paths 
-
-
                 full_path_moving_im = [i for i in self.atlas_full_paths if moving_image in i]
-                pdb.set_trace()
-                # 
                 if os.path.exists(spec_results_path) is False:
                     os.mkdir(str(spec_results_path))
+
                 print('moving image: \t' + moving_image)
-
+                print(full_path_moving_im)
                 # pdb.set_trace()
-                el = elastix.ElastixInterface(elastix_path=self.elastix_path)
-                el.register(
-                    fixed_image=self.fixed_image,
-                    fixed_mask=self.fixed_im_mask,
-                    moving_image=full_path_moving_im[0],
-                    parameters=self.parameter_files,
-                    output_dir=spec_results_path)
+                for moving_image_path in full_path_moving_im:
+                    el = elastix.ElastixInterface(elastix_path=self.elastix_path)
+                    el.register(
+                        fixed_image=self.fixed_image,
+                        fixed_mask=self.fixed_im_mask,
+                        moving_image=moving_image_path,
+                        parameters=self.parameter_files,
+                        output_dir=spec_results_path)
                 
-                # # transformix
-                # transform_path = os.path.join(spec_results_path, 'TransformParameters.0.txt')
-                
-                # tr_output_dir = os.path.join(spec_results_path, 'transformix_results')
-                # if os.path.exists(tr_output_dir) is False:
-                #     os.mkdir(str(tr_output_dir))
-
-                # tr = elastix.TransformixInterface(parameters=transform_path, transformix_path=self.transformix_path)
-                # tr.transform_image(image_path = os.path.join(spec_results_path, 'result.0.mhd'), output_dir=tr_output_dir)
 
         elif isinstance(fixed_image, str):
                 spec_results_path = os.path.join(self.results_path, 'atlas_img_' + moving_image[:-4] + '_fixed_' + fixed_image[:-4])
                 self.results_list.append(spec_results_path)
-                # path_moving_im = self.atlas_full_paths 
-                pdb.set_trace()
                 full_path_moving_im = os.path.join(image_path, moving_image[:-4], moving_image) # wil not work for .nrrd files
                 full_path_fixed_im = os.path.join(image_path, fixed_image[:-4], fixed_image)
-                # pdb.set_trace()
+
                 if os.path.exists(spec_results_path) is False:
                     os.mkdir(str(spec_results_path))
 
                 print('moving image: \t' + moving_image)
-                # pdb.set_trace()
-                # affine transform
+
                 el = elastix.ElastixInterface(elastix_path=self.elastix_path)
                 el.register(
                     fixed_image=full_path_fixed_im,
@@ -187,15 +163,7 @@ class Atlas:
                     parameters=self.parameter_files,
                     output_dir=spec_results_path)
                 
-                # # transformix
-                # transform_path = os.path.join(spec_results_path, 'TransformParameters.0.txt')
-                
-                # tr_output_dir = os.path.join(spec_results_path, 'transformix_results')
-                # if os.path.exists(tr_output_dir) is False:
-                #     os.mkdir(str(tr_output_dir))
 
-                # tr = elastix.TransformixInterface(parameters=transform_path, transformix_path=self.transformix_path)
-                # tr.transform_image(image_path = os.path.join(spec_results_path, 'result.0.mhd'), output_dir=tr_output_dir)
         else:
             print('Elastix was not used, check the input variable or for bugs in the code')
         
