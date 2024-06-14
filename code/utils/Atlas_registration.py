@@ -30,10 +30,8 @@ class Atlas:
                           '12_2018', '17_2016', '18_2018', '29_2017', '30_2017']
         atlas_list = []
         for scan_code in self.inputs:
-            # pdb.set_trace()
             if scan_code in all_scan_codes:
                    atlas_list.append(scan_code)
-            # pdb.set_trace()
             assert scan_code in all_scan_codes, f"{scan_code} is an invalid entry, check for typos"
 
         self.atlas_list = atlas_list
@@ -41,26 +39,25 @@ class Atlas:
     
     def _check_L_or_R(self):
         # !! only applicable for the atlas_images: '07_2017' (right), '17_2016' (left), '30_2017' (left) !!
-        if self.fixed_image == '01_2019':   # right-sided knee
+        if '01_2019' in self.fixed_image:   # right-sided knee
             self.atlas_list = [e for e in self.atlas_list if e not in ('17_2016', '30_2017')]
-        elif self.fixed_image == '08_2017':     # left-sided knee
+        elif '08_2017' in self.fixed_image:     # left-sided knee
             self.atlas_list.remove('07_2017')
-        elif self.fixed_image == '08_2017R':
+        elif '08_2017R' in self.fixed_image:
             self.atlas_list = [e for e in self.atlas_list if e not in ('17_2016', '30_2017')]
-        elif self.fixed_image == '10_2019':
+        elif '10_2019' in self.fixed_image:
             self.atlas_list = [e for e in self.atlas_list if e not in ('17_2016', '30_2017')]
-        elif self.fixed_image == '12_2018':
+        elif '12_2018' in self.fixed_image:
             self.atlas_list = [e for e in self.atlas_list if e not in ('17_2016', '30_2017')]
-        elif self.fixed_image == '18_2018':
+        elif '18_2018' in self.fixed_image:
             self.atlas_list = [e for e in self.atlas_list if e not in ('17_2016', '30_2017')]
-        elif self.fixed_image == '29_2017':
+        elif '29_2017' in self.fixed_image:
             self.atlas_list.remove('07_2017')
 
         return self.atlas_list
     
 
     def create_atlas_dir(self, path=None):
-        # pdb.set_trace()
         if path is None and self.path is None:
             return f"Variable: 'path', is not defined"
         elif path is None:
@@ -69,10 +66,14 @@ class Atlas:
             self.path = path
 
         self.atlas_list = self._check_atlas_codes()
-        # pdb.set_trace()
         # only include the same VOI (fibula not included)
+
+    def include_anatomical_struct(self):
         atlas_full_paths = []
         for scan in self.atlas_list:
+             
+            # atlas_full_paths.append(os.path.join(self.path, scan, scan +'.mhd'))
+                 
             for anatomical_struct in ['_femur', '_tibia', '_patella']:
                 atlas_full_paths.append(os.path.join(self.path, scan, scan + anatomical_struct +'.mhd'))
 
@@ -84,8 +85,12 @@ class Atlas:
             atlas_full_paths_filt = [e for e in atlas_full_paths if "patella" in e]
         # elif 'fibula' in self.fixed_image:
         #     atlas_full_paths_filt = [e for e in atlas_full_paths if "fibula" in e]
-        
         self.atlas_full_paths = atlas_full_paths_filt
+        return atlas_full_paths
+    
+    def _correct_moving_img(self):
+         if 'femur' in self.moving_img:
+              a = ''
         
 
     
@@ -105,10 +110,9 @@ class Atlas:
         self.fixed_image = fixed_image
         self.fixed_im_mask = fixed_im_mask
         self.results_path = results_path
-        self.atlas_dir = self.create_atlas_dir(atlas_path)
+        self.create_atlas_dir(atlas_path)
         self.atlas_list = self._check_L_or_R()
-        # pdb.set_trace()
-
+        self.include_anatomical_struct()
     
     def run_elastix(self, fixed_image=None, fixed_im_mask=None, moving_image=None, image_path=None):
         if self.atlas_full_paths is None:
@@ -127,21 +131,23 @@ class Atlas:
             for moving_image in self.atlas_list:
                 spec_results_path = os.path.join(self.results_path, 'atlas_img_' + moving_image + '_fixed_'+ fixed_image)
                 self.results_list.append(spec_results_path)
-                full_path_moving_im = [i for i in self.atlas_full_paths if moving_image in i]
+                full_path_moving_im = [i for i in self.atlas_full_paths if moving_image in i][0]
                 if os.path.exists(spec_results_path) is False:
                     os.mkdir(str(spec_results_path))
+                # pdb.set_trace()
+                # self._check_moving_paths()
 
                 print('moving image: \t' + moving_image)
                 print(full_path_moving_im)
-                # pdb.set_trace()
-                for moving_image_path in full_path_moving_im:
-                    el = elastix.ElastixInterface(elastix_path=self.elastix_path)
-                    el.register(
-                        fixed_image=self.fixed_image,
-                        fixed_mask=self.fixed_im_mask,
-                        moving_image=moving_image_path,
-                        parameters=self.parameter_files,
-                        output_dir=spec_results_path)
+
+                el = elastix.ElastixInterface(elastix_path=self.elastix_path)
+                el.register(
+                    fixed_image=self.fixed_image,
+                    fixed_mask=self.fixed_im_mask,
+                    moving_image=full_path_moving_im,
+                    parameters=self.parameter_files,
+                    output_dir=spec_results_path)
+                    
                 
 
         elif isinstance(fixed_image, str):
@@ -167,7 +173,6 @@ class Atlas:
         else:
             print('Elastix was not used, check the input variable or for bugs in the code')
         
-
 
 
     # def bspline_elastix(self, affine_output_dirs = False):
@@ -230,20 +235,33 @@ class Atlas:
                     #  else:
                         transformix_path = self.transformix_path
                 
-
-                transform_file = os.path.join(transformation_file_dir, 'TransformParameters.1.txt') # last parameter file performed in this case
+                transform_file1 = os.path.join(transformation_file_dir, 'TransformParameters.1.txt') # last parameter file performed in this case
                 
-                tr_output_dir = os.path.join(transformation_file_dir, 'transformix_results')
-                if os.path.exists(tr_output_dir) is False:
-                    os.mkdir(str(tr_output_dir))
+                tr_output_dir1 = os.path.join(transformation_file_dir, 'transformix_results1')
+                if os.path.exists(tr_output_dir1) is False:
+                    os.mkdir(str(tr_output_dir1))
 
                 # pdb.set_trace()
                 # make code indicating what knee tructure it is:
                 # knee_struct = spec_results_path.split("_",3)[-1].split("_",4)  
-                pdb.set_trace()
+                # pdb.set_trace()
             
-                tr = elastix.TransformixInterface(parameters=transform_file, transformix_path=transformix_path)
-                tr.transform_image(image_path = segmentation_img, output_dir=tr_output_dir)
+                tr = elastix.TransformixInterface(parameters=transform_file1, transformix_path=transformix_path)
+                tr.transform_image(image_path = segmentation_img, output_dir=tr_output_dir1)
+
+                # # ---------------------------------
+                # transform_file1 = os.path.join(transformation_file_dir, 'TransformParameters.1.txt') # last parameter file performed in this case
+                # tr_output_dir1 = os.path.join(transformation_file_dir, 'transformix_results1')
+                # if os.path.exists(tr_output_dir1) is False:
+                #     os.mkdir(str(tr_output_dir1))
+
+                # # pdb.set_trace()
+                # # make code indicating what knee tructure it is:
+                # # knee_struct = spec_results_path.split("_",3)[-1].split("_",4)  
+                # pdb.set_trace()
+            
+                # tr = elastix.TransformixInterface(parameters=transform_file1, transformix_path=transformix_path)
+                # tr.transform_image(image_path = os.path.join(tr_output_dir0, 'result.mhd'), output_dir=tr_output_dir1)
 
     def show_evaluation(self):
 
