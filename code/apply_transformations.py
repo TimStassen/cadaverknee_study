@@ -14,14 +14,14 @@ a = Atlas(inputs = atlas_inputs)
 moving_images = ['08_2017', '08_2017R', '10_2019', '12_2018', 
                  '18_2018', '29_2017', '01_2019']
 
-elastix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\elastix.exe')
-transformix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\transformix.exe')
+elastix_path = os.path.join(r'C:\Software\elastix\elastix.exe')
+transformix_path = os.path.join(r'C:\Software\elastix\transformix.exe')
 affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_affine_atlas.txt'
 bspline_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_bspline_multires.txt'
 
 registrations_dir_path = r'D:\atlas_registration_results_bone_segs'
 registrations_dir = os.listdir(registrations_dir_path)
-segmentation_dir = r'D:\segmentations PCCT Tim\cartilage_PCCT_atlas'
+segmentation_dir = r'D:\segmentations PCCT Tim\cartilage_PCCT_atlas_flipped2'
 for registration in registrations_dir:
     # pdb.set_trace()
     parts_registration_name = registration.split('_')
@@ -31,10 +31,11 @@ for registration in registrations_dir:
     elif anatomical_struct == 'tibia':
           cartilage = 'tibial_cartilage'
     elif anatomical_struct == 'patella':
-          cartilage = 'retro_patellar_cartilage'
+          cartilage = 'retro_patellar_cartilage'    
     else: 
           continue
-        
+    
+    pdb.set_trace()
     seg_img_name = parts_registration_name[2] + '_' + parts_registration_name[3]
     seg_img = os.path.join(segmentation_dir, seg_img_name, seg_img_name + '_' + cartilage + '.mhd') # or nrrd if it is not converted
     # pdb.set_trace()
@@ -48,6 +49,7 @@ for registration in registrations_dir:
     #                         fixed_im_mask=fixed_mask, results_path=results_path)
     
     a.apply_transformation(transformation_file_dir, seg_img, fixed_image=None, moving_image=None, transformix_path=transformix_path)
+    pdb.set_trace()
 
 
 

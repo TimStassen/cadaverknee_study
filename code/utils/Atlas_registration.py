@@ -240,7 +240,7 @@ class Atlas:
                 # pdb.set_trace()
                 # make code indicating what knee tructure it is:
                 # knee_struct = spec_results_path.split("_",3)[-1].split("_",4)  
-                pdb.set_trace()
+                # pdb.set_trace()
             
                 tr = elastix.TransformixInterface(parameters=transform_file, transformix_path=transformix_path)
                 tr.transform_image(image_path = segmentation_img, output_dir=tr_output_dir)
@@ -253,8 +253,8 @@ if __name__ == "__main__":
     atlas_inputs = ['17_2016', '07_2017', '30_2017']
     a = Atlas(inputs = atlas_inputs)
 
-    elastix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\elastix.exe')
-    transformix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\transformix.exe')
+    elastix_path = os.path.join(r'C:\Software\elastix\elastix.exe')
+    transformix_path = os.path.join(r'C:\Software\elastix\transformix.exe')
     affine_parameter_file = r'C:\Users\20201900\Desktop\cadaver_knee_study2-main\code\cadaver_knee_study2\code\elastix_parameter_files\parameters_similarity.txt'
     bspline_parameter_file = r'C:\Users\20201900\Desktop\cadaver_knee_study2-main\code\cadaver_knee_study2\code\elastix_parameter_files\Parameters_BSpline_adjusted.txt'
     fixed_image = r"D:\masked_scans_bone\12_2018_femur\12_2018_femur.mhd"

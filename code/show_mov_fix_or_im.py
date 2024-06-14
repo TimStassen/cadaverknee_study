@@ -3,11 +3,11 @@ import SimpleITK as sitk
 import numpy as np
 import matplotlib.pyplot as plt
 
-fix_path = r'D:\ME_data_mhd\12_2018\12_2018.mhd'
+fix_path = r'D:\ME_data_mhd\01_2019\01_2019.mhd'
 itk_image = sitk.ReadImage(fix_path)
 image_array1 = sitk.GetArrayViewFromImage(itk_image)
 
-mov_path = r"D:\atlas_registration_results_trial11_premask\affine_atlas_img_07_2017_fixed_01_2019\result.0.mhd"
+mov_path = r"D:\atlas_registration_results_bone_segs\atlas_img_07_2017_fixed_01_2019_femur\result.0.mhd"
 itk_image = sitk.ReadImage(mov_path)
 image_array2 = sitk.GetArrayViewFromImage(itk_image)
 

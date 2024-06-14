@@ -8,10 +8,10 @@ def convert2mhd(file_path, or_im_path, output_path):
     if os.path.exists(output_path) is False:
         os.mkdir(str(output_path))
 
-    scan_name = file_path.split('\\')[-1]
-    scan_name = scan_name[:-5]
+    # scan_name = file_path.split('\\')[-1]
+    scan_name = '01_2019' #scan_name[:-4]
     # nrrd_path = r'E:\segmentations PCCT Tim\masks\08_2017.nrrd'
-    itk_mask = sitk.ReadImage(mask_path)
+    itk_mask = sitk.ReadImage(file_path)
     image_array = sitk.GetArrayViewFromImage(itk_mask)
     # image_array2.shape
 
@@ -29,11 +29,11 @@ def convert2mhd(file_path, or_im_path, output_path):
 
 
 if __name__ == "__main__":
-    root_mask_path = r'D:\segmentations PCCT Tim\cartilage_nrrd\07_2017'
+    root_mask_path = r'D:\Chondral_Quant_seg\01_2019'
     root_mask_dir = os.listdir(root_mask_path)
     root_im_path = r'D:\ME_data_mhd'
-    output_path = r'D:\segmentations PCCT Tim\cartilage_PCCT_atlas'
-    for image in root_mask_dir:
+    output_path = r'D:\segmentations PCCT Tim\cartilage_Chonqua'
+    for image in root_im_path:
         # pdb.set_trace()
         mask_path = os.path.join(root_mask_path, image)
         im_path = os.path.join(root_im_path, image[:7], image[:7] + '.mhd')
