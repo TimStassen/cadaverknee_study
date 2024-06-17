@@ -14,14 +14,16 @@ def convert2mhd(file_path, or_im_path, output_path):
     itk_mask = sitk.ReadImage(mask_path)
     image_array = sitk.GetArrayViewFromImage(itk_mask)
     # image_array2.shape
-    image_array_fl = np.flip(image_array, axis=0) # MUST BE FLIPPED FOR SOME STRANGE REASON
+
+    # image_array_fl = np.flip(image_array, axis=0) # MUST BE FLIPPED FOR SOME STRANGE REASON
+    
     # get original image for metadata
     # offset and elementspacing
     itk_image = sitk.ReadImage(or_im_path)
     spacing = itk_image.GetSpacing()
     origin = itk_image.GetOrigin()
 
-    sitk_img = sitk.GetImageFromArray(image_array_fl, isVector=False)
+    sitk_img = sitk.GetImageFromArray(image_array, isVector=False)
     sitk_img.SetSpacing(spacing)
     sitk_img.SetOrigin(origin)
     sitk.WriteImage(sitk_img, os.path.join(output_path, scan_name + ".mhd"))

@@ -3,7 +3,7 @@ import SimpleITK as sitk
 import numpy as np
 import matplotlib.pyplot as plt
 import pdb
-
+pdb.set_trace()
 def flip_masks(mask_path, im_path, output_path):
     if os.path.exists(output_path) is False:
         os.mkdir(str(output_path))
@@ -22,8 +22,8 @@ def flip_masks(mask_path, im_path, output_path):
     # offset and elementspacing
     itk_image = sitk.ReadImage(im_path)
     spacing = itk_image.GetSpacing()
-    origin_ = itk_image.GetOrigin()
-    origin = [origin_[0], origin_[1], 1479.389]
+    origin = itk_image.GetOrigin()
+    # origin = [origin_[0], origin_[1], 1479.389]
     origin = tuple(origin)
     pdb.set_trace()
 
