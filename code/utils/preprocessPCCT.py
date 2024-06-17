@@ -70,7 +70,7 @@ def dcm2mhd(input_dir, output_dir, new_filename):
     dcm_dir = glob.glob(input_dir)
     # pdb.set_trace()
     dcm_dir_list = os.listdir(dcm_dir[0])
-    image = pydicom.read_file(os.path.join(input_dir,dcm_dir_list[0]))
+    image = pydicom.read_file(os.path.join(input_dir,dcm_dir_list[0])) # not allways correct !! for knee 18_2018 is false
     dim = (int(image.Rows), int(image.Columns), len(dcm_dir))
     spacing = (float(image.PixelSpacing[0]), float(image.PixelSpacing[1]), float(image.SliceThickness))
     origin = image.ImagePositionPatient
