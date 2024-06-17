@@ -165,14 +165,17 @@ if __name__ == "__main__":
     # atlas_inputs = ['17_2016', '07_2017', '30_2017']
     a = Image_Registration()
 
-    elastix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\elastix.exe')
-    transformix_path = os.path.join(r'C:\Users\20201900\Desktop\Master BME\8DM20\elastix\transformix.exe')
-    affine_parameter_file = r'C:\Users\20201900\Desktop\cadaver_knee_study2-main\code\cadaver_knee_study2\code\elastix_parameter_files\parameters_MR_pcct.txt'
-    fixed_image = r"D:\segmentations MR Tim\07_2017\07_2017_femoral_cartilage.nrrd" #MR
+    elastix_path = os.path.join(r'C:\Tim\Software\Elastix\elastix.exe')
+    transformix_path = os.path.join(r'C:\Tim\Software\Elastix\transformix.exe')
+    affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_MR_pcct.txt'
+    # fixed_image = r'E:\MR_bone_segs\07_2017\07_2017_femur.nrrd' #MR
     # fixed_mask = r'D:\segmentations PCCT Tim\masks\01_2019.nrrd' # FILL IN PATH TO .nrrd FILE
-    moving_image = r"D:\TUe_segmentations_PCCT\07_2017\07_2017_femoral_cartilage.nrrd" #PCCT
+    fixed_image = r'E:\TUe_masked_MR\30_2017\30_2017_tibia.nrrd' #MR
+    moving_image = r"E:\segmentations PCCT Tim\bone_segs\nrrd\30_2017\30_2017_tibia.nrrd" #PCCT
     # moving_image = r"D:\ME_data_mhd\07_2017\07_2017.mhd" #PCCT
-    results_path = r'D:\registration_results_test17'
+    results_path = r'E:\registration_results_test22'
+
+
     a.initialize_elastix(elastix_path, transformix_path, 
                          parameter_files=[affine_parameter_file], 
                          fixed_image=fixed_image, moving_image=moving_image, 
@@ -183,7 +186,7 @@ if __name__ == "__main__":
     a.run_elastix()
 
 
-    segmentation_path = r'D:\TUe_segmentations_PCCT\07_2017' # PCCT
+    segmentation_path = r'E:\TUe_segmentations_PCCT\30_2017' # PCCT
     segmentation_dir = os.listdir(segmentation_path)
     results_dir = os.listdir(results_path)
     for registration in results_dir:
@@ -201,7 +204,7 @@ if __name__ == "__main__":
         knee = parts_registration_name[0] + '_' + parts_registration_name[1]
         seg_img_name = parts_registration_name[0] + '_' + parts_registration_name[1] # + '_' + 'femoral_cartilage'
         # seg_img = os.path.join(segmentation_path, seg_img_name + '.nrrd') # or nrrd if it is not converted
-        seg_img =os.path.join(segmentation_path, seg_img_name + '_femoral_cartilage.nrrd') # or nrrd if it is not converted
+        seg_img =os.path.join(segmentation_path, seg_img_name + '_tibial_cartilage.nrrd') # or nrrd if it is not converted
         # transform_matrix0 = os.path.join(registrations_dir_path, registration, 'TransformParameters.0.txt')
         transformation_file_dir = os.path.join(results_path, registration)
         # pdb.set_trace()   
