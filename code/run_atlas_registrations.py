@@ -14,9 +14,9 @@ a = Atlas(inputs = atlas_inputs)
 # fix_images = ['08_2017', '10_2019']
 
 # DEFAUT TURN ACTIVE WHEN REAL REGISTRATIONS NEED TO BE PERFORMED
-# fix_images = ['08_2017', '08_2017R', '10_2019', '12_2018', 
-#                  '18_2018R', '29_2017', '01_2019']
-fix_images = ['08_2017R']
+fix_images = ['08_2017', '08_2017R', '10_2019', '12_2018', 
+                 '18_2018', '29_2017', '01_2019']
+# fix_images = ['08_2017R']
 
 
 # 'fibula' is also present but not included in the registrations
@@ -36,7 +36,7 @@ for image in fix_im_w_anatostruct:
     fixed_image = f'E:\\masked_scans_bone\\' + image_small + '\\' + image + '.mhd'
     fixed_mask = f'E:\segmentations PCCT Tim\masks_flip\\' + '\\' + image + '.mhd' # MASKS ARE FLIPPED, NOT IMAGES!
     atlas_path = r'E:\masked_scans_bone'
-    results_path = r'E:\atlas_registration_results_bone_segs6'
+    results_path = r'E:\atlas_registration_results_bone_segs_testrun2'
     a.initialize_elastix(elastix_path, transformix_path=transformix_path, parameter_files= [sim_parameter_file, bspline_parameter_file],
                             fixed_image=fixed_image, atlas_path=atlas_path, 
                             fixed_im_mask=None, results_path=results_path)
@@ -53,7 +53,7 @@ for image in fix_im_w_anatostruct:
     #             if os.path.exists(tr_output_dir) is False:
     #                 os.mkdir(str(tr_output_dir))
 atlas_path = r'E:\masked_scans_bone'
-results_path = r'E:\atlas_registration_results_bone_segs'
+results_path = r'E:\atlas_registration_results_bone_segs_testrun2'
 
 # segmentation_img_dir = r'c:\Users\T2025\Desktop\cadaver_knee_study\data\Segmentations_tim\PCCT\17_2016'
 

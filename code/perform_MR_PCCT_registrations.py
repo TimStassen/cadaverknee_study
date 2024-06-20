@@ -1,22 +1,22 @@
 from utils import Image_Registration
 import os
 import pdb
-
+# pdb.set_trace()
 root_MR_dir = r"E:\segmentations MR Tim"
 root_PCCT_dir = r"E:\TUe_segmentations_PCCT"
 
-# root_MR_dir = r"E:\TUe_masked_MR"
-# root_PCCT_dir = r"E:\segmentations PCCT Tim\bone_segs\nrrd"
+# root_MR_dir = r"E:\MR_masks_shrunk" #r"E:\TUe_masked_MR"
+# root_PCCT_dir =  r"E:\segmentations PCCT Tim\bone_segs\nrrd"
 
-results_path = r"E:\registration_results_FINAL4"
+results_path = r"E:\registration_results_FINAL11_shrunk_sim"
 
 elastix_path = os.path.join(r'C:\Tim\Software\Elastix\elastix.exe')
 transformix_path = os.path.join(r'C:\Tim\Software\Elastix\transformix.exe')
 affine_parameter_file = r'C:\Users\T2025\Desktop\cadaver_knee_study\code\elastix_parameter_files\parameters_MR_pcct.txt'
 
 included_knees = ['07_2017', '17_2016', '18_2018', '30_2017']
-# included_structures = ['femur', 'patella', 'tibia']
-included_structures = ['femoral_cartilage', 'tibial_cartilage', 'retro_patellar_cartilage']
+included_structures = ['femur', 'patella', 'tibia']
+# included_structures = ['femoral_cartilage', 'tibial_cartilage', 'retro_patellar_cartilage']
  
 # loop over all files
 for knee in included_knees:

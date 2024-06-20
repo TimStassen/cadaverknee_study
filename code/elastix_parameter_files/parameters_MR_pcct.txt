@@ -10,6 +10,7 @@
 // in case of very large 3D images.
 (FixedInternalImagePixelType "float")
 (MovingInternalImagePixelType "float")
+(UseDirectionCosines "true")
 
 // **************** Main Components **************************
 
@@ -33,6 +34,7 @@
 (Transform "SimilarityTransform")
 //(Transform "AffineTransform")
 (Metric "AdvancedMattesMutualInformation")
+//(Metric "AdvancedMeanSquares")
 
 // ***************** Transformation **************************
 
@@ -66,7 +68,7 @@
 // If the mask serves as region of interest, set it to false.
 // If the mask indicates which pixels are valid, then set it to true.
 // If you do not use a mask, the option doesn't matter.
-(ErodeMask "false")
+(ErodeMask "true")
 
 // ******************** Multiresolution **********************
 
@@ -121,7 +123,7 @@
 // It may improve accuracy if you set this to 3. Never use 0.
 // An order of 1 gives linear interpolation. This is in most 
 // applications a good choice.
-(BSplineInterpolationOrder 1)
+(BSplineInterpolationOrder 0)
 
 // Order of B-Spline interpolation used for applying the final
 // deformation.
@@ -129,7 +131,7 @@
 // 1 gives worse accuracy (linear interpolation)
 // 0 gives worst accuracy, but is appropriate for binary images
 // (masks, segmentations); equivalent to nearest neighbor interpolation.
-(FinalBSplineInterpolationOrder 3)
+(FinalBSplineInterpolationOrder 0)
 
 //Default pixel value for pixels that come from outside the picture:
 (DefaultPixelValue -3000)
@@ -142,6 +144,6 @@
 
 // The pixel type and format of the resulting deformed moving image
 (ResultImagePixelType "short")
-(ResultImageFormat "mhd")
+(ResultImageFormat "nii")
 
 

@@ -3,7 +3,7 @@ import os
 import pdb
 import SimpleITK as sitk
 
-root_folder_pcct = r'E:\closed_elastix_cartilages3'
+root_folder_pcct = r'E:\closed_elastix_cartilages'
 root_folder_pcct_images = os.listdir(root_folder_pcct)
 
 for image in root_folder_pcct_images:
@@ -33,7 +33,7 @@ for image in root_folder_pcct_images:
 
         # pdb.set_trace()
 
-
+        print('file:', image)
         overlap_measures_filter = sitk.LabelOverlapMeasuresImageFilter()
         overlap_measures_filter.Execute(gt_itk, new_pred_itk)
         dsc = overlap_measures_filter.GetDiceCoefficient()
