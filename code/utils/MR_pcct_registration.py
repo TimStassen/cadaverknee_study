@@ -1,3 +1,16 @@
+""" 
+This file is created for the semi-automatic registration approach 
+as part of a project done at the Orthopeadic Surgery department of Maastricht University. 
+This work is done in the fullfillment of the MSc Biomedical Engineering internship 
+in the  Medical Image Analysis group at the TU/e (course code: 8ZM05)
+
+
+This utils code file contains the objects and functions
+supporting the analysis of the PCCT and MR segmetation similarity
+
+by Tim Stassen (student number: 1633023) 
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -11,6 +24,9 @@ from collections import Counter
 import pdb
 
 class Image_Registration:
+    """ Image registration class.
+        Initializes and runs elastix with all the required information
+    """
     def __init__(self, path=None):
         # self.inputs = inputs
         self.path = path
@@ -23,32 +39,45 @@ class Image_Registration:
 
 
     def include_anatomical_struct(self):
-        atlas_full_paths = []
+        """ add the relevant anatomical structures to the indices of the directory list (dirlist)
+        i.e. 'femur', 'tibia', 'patella'
+        Parameter(s):   path:                (str)  The path of the atlas directory, if 
+                                                    'None' self.path during initialization is used.
+        Returns:                             (list) The directory list containing full paths of the knee scans     
+            """
+        full_paths = []
         for scan in self.atlas_list:
              
             # atlas_full_paths.append(os.path.join(self.path, scan, scan +'.mhd'))
                  
             for anatomical_struct in ['_femur', '_tibia', '_patella']:
-                atlas_full_paths.append(os.path.join(self.path, scan, scan + anatomical_struct +'.mhd'))
+                full_paths.append(os.path.join(self.path, scan, scan + anatomical_struct +'.mhd'))
 
         if 'femur' in self.fixed_image:
-            atlas_full_paths_filt = [e for e in atlas_full_paths if "femur" in e]
+            full_paths_filt = [e for e in full_paths if "femur" in e]
         elif 'tibia' in self.fixed_image:
-            atlas_full_paths_filt = [e for e in atlas_full_paths if "tibia" in e]
+            full_paths_filt = [e for e in full_paths if "tibia" in e]
         elif 'patella' in self.fixed_image:
-            atlas_full_paths_filt = [e for e in atlas_full_paths if "patella" in e]
+            full_paths_filt = [e for e in full_paths if "patella" in e]
         # elif 'fibula' in self.fixed_image:
         #     atlas_full_paths_filt = [e for e in atlas_full_paths if "fibula" in e]
-        self.atlas_full_paths = atlas_full_paths_filt
-        return atlas_full_paths
-    
-    def _correct_moving_img(self):
-         if 'femur' in self.moving_img:
-              a = ''
-        
+        self.atlas_full_paths = full_paths_filt
+        return full_paths
 
     
-    def initialize_elastix(self, elastix_path, transformix_path, parameter_files, fixed_image, moving_image, fixed_im_mask, results_path, anatomical_structure=None):
+    def initialize_elastix(self, elastix_path, transformix_path, parameter_files, fixed_image,
+                            moving_image, fixed_im_mask, results_path, anatomical_structure=None):
+        """ Initialize the object to perform the registration
+            Parameter(s):   elastix_path:                   (str)   Path to the elastix executable (.exe) file
+                            transformix_path:               (str)   Path to the transformix executable (.exe) file
+                            parameter_files:                (str)   Path to the elastix parameter files
+                            fixed_image:                    (str)   Path to the fixed input image 
+                            atlas_path:                     (list)  List containing the paths to the atlas (moving) files
+                            fixed_im_mask:                  (str)   path to fixed image mask file 
+                            results_path:                   (str)   Path where results will be stored 
+                            anatomical_structure:
+            Returns:        
+                """
         
         self.elastix_path = elastix_path
         self.transformix_path = transformix_path
@@ -69,13 +98,13 @@ class Image_Registration:
         # self.include_anatomical_struct()
     
     def run_elastix(self, fixed_image=None, fixed_im_mask=None, moving_image=None, image_path=None):
-        # if self.atlas_full_paths is None:
-        #     return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
-        # elif self.parameter_files is None:
-        #     return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')         
-        # elif self.fixed_image is None:
-        #     return print('First initialize elastix properly. \n Initialize by a = Atlas(path=path) \n a.initialize_elastix(elastix_path, transformix_path, parameter_file, fixed_image, atlas_path, fixed_im_mask, results_path) \n a.run_elastix()')
-        
+        """ Initialize the object to perform the registration
+            Parameter(s):   fixed_image:                    (str)   Path to the fixed input image 
+                            fixed_im_mask:                  (str)   path to fixed image mask file 
+                            image_path:                     (str)   Path path (without filename) of moving and fixed image 
+                            anatomical_structure:
+            Returns:        
+        """
         if os.path.exists(self.results_path) is False:
                 os.mkdir(str(self.results_path))
         self.results_list = []
@@ -84,17 +113,7 @@ class Image_Registration:
             fixed_image = fixed_image[:-4]
             moving_image = self.moving_image.split('\\')[-1]
             moving_image = moving_image[:-4]
-            # pdb.set_trace()
-            # for moving_image in self.atlas_list:
-            #     spec_results_path = os.path.join(self.results_path, 'atlas_img_' + moving_image + '_fixed_'+ fixed_image)
-            #     self.results_list.append(spec_results_path)
-            #     full_path_moving_im = [i for i in self.atlas_full_paths if moving_image in i][0]
 
-            #     # pdb.set_trace()
-            #     # self._check_moving_paths()
-
-            #     print('moving image: \t' + moving_image)
-            #     print(full_path_moving_im)
             spec_results_path = os.path.join(self.results_path, moving_image)
             if os.path.exists(spec_results_path) is False:
                 os.mkdir(str(spec_results_path))
@@ -106,27 +125,6 @@ class Image_Registration:
                 parameters=self.parameter_files,
                 output_dir=spec_results_path)
                     
-                
-
-        # elif isinstance(fixed_image, str):
-        #         spec_results_path = os.path.join(self.results_path, 'moving_img_' + moving_image[:-4] + '_fixed_' + fixed_image[:-4])
-        #         self.results_list.append(spec_results_path)
-        #         full_path_moving_im = os.path.join(image_path, moving_image[:-4], moving_image) # wil not work for .nrrd files
-        #         full_path_fixed_im = os.path.join(image_path, fixed_image[:-4], fixed_image)
-
-        #         if os.path.exists(spec_results_path) is False:
-        #             os.mkdir(str(spec_results_path))
-
-        #         print('moving image: \t' + moving_image)
-
-        #         el = elastix.ElastixInterface(elastix_path=self.elastix_path)
-        #         el.register(
-        #             fixed_image=full_path_fixed_im,
-        #             fixed_mask=fixed_im_mask,
-        #             moving_image=full_path_moving_im,
-        #             parameters=self.parameter_files,
-        #             output_dir=spec_results_path)
-                
 
         else:
             print('Elastix was not used, check the input variable or for bugs in the code')
@@ -134,32 +132,32 @@ class Image_Registration:
 
 
     def apply_transformation(self, transformation_file_dir, segmentation_img, fixed_image=None, moving_image=None, transformix_path=None):
+        """ Initialize the object to perform the registration
+            Parameter(s):   transformation_file_dir:        (str)   Path to transformation results dir
+                            segmentation_img:               (str)   path to the segmentation mask file
+                            fixed_image:                    (str)   Path to the fixed input image 
+                            moving_image:                   (str)   path to fixed image mask file 
+                            image_path:                     (str)   Path path (without filename) of moving and fixed image 
+                            transformix_path:               (str)   Path to the transformix executable (.exe) file
+            Returns:        
+        """
         # transformix
         # if registratons have been done in the same operation, self.results_list can be used, otherwise the path has to be specified
             # for spec_results_path in os.listdir(transformation_file_dir):
-                if transformix_path == None:
-                    #  if self.transformix_path == None:
-                    # assert 'No transformix path defined! Add this in transformix_path=... or during initialization'
-                    #  else:
-                        transformix_path = self.transformix_path
-                
-                transform_file1 = os.path.join(transformation_file_dir, 'TransformParameters.0.txt') # last parameter file performed in this case
-                
-                tr_output_dir1 = os.path.join(transformation_file_dir, 'transformix_results0')
-                if os.path.exists(tr_output_dir1) is False:
-                    os.mkdir(str(tr_output_dir1))
-                # pdb.set_trace()
-                # pdb.set_trace()
-                # make code indicating what knee tructure it is:
-                # knee_struct = spec_results_path.split("_",3)[-1].split("_",4)  
-                # pdb.set_trace()
-            
-                tr = elastix.TransformixInterface(parameters=transform_file1, transformix_path=transformix_path)
-                tr.transform_image(image_path = segmentation_img, output_dir=tr_output_dir1)
-
-    def show_evaluation(self):
-
-        return None
+        if transformix_path == None:
+            #  if self.transformix_path == None:
+            # assert 'No transformix path defined! Add this in transformix_path=... or during initialization'
+            #  else:
+            transformix_path = self.transformix_path
+        
+        transform_file1 = os.path.join(transformation_file_dir, 'TransformParameters.0.txt') # last parameter file performed in this case
+        
+        tr_output_dir1 = os.path.join(transformation_file_dir, 'transformix_results0')
+        if os.path.exists(tr_output_dir1) is False:
+            os.mkdir(str(tr_output_dir1))
+    
+        tr = elastix.TransformixInterface(parameters=transform_file1, transformix_path=transformix_path)
+        tr.transform_image(image_path = segmentation_img, output_dir=tr_output_dir1)
 
 if __name__ == "__main__":
     # atlas_inputs = ['17_2016', '07_2017', '30_2017']
@@ -204,7 +202,7 @@ if __name__ == "__main__":
         knee = parts_registration_name[0] + '_' + parts_registration_name[1]
         seg_img_name = parts_registration_name[0] + '_' + parts_registration_name[1] # + '_' + 'femoral_cartilage'
         # seg_img = os.path.join(segmentation_path, seg_img_name + '.nrrd') # or nrrd if it is not converted
-        seg_img =os.path.join(segmentation_path, seg_img_name + '_tibial_cartilage.nrrd') # or nrrd if it is not converted
+        seg_img =os.path.join(segmentation_path, seg_img_name + cartilage + '.nrrd') # or nrrd if it is not converted
         # transform_matrix0 = os.path.join(registrations_dir_path, registration, 'TransformParameters.0.txt')
         transformation_file_dir = os.path.join(results_path, registration)
         # pdb.set_trace()   
